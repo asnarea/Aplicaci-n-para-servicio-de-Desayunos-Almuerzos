@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pantalla Comedor</title>
+  <style>
+    html, body { height:100%; margin:0; background:#0f172a; color:#e2e8f0; font-family:system-ui, sans-serif; }
+    .wrap { height:100%; display:grid; place-items:center; text-align:center; gap:16px; padding:16px; }
+    img { max-height:70vh; max-width:90vw; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,.4); }
+    .info { font-size:1.2rem; opacity:.9 }
+    .codigo { font-size:1.6rem; font-weight:700; letter-spacing:.03em }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <img id="foto"
+       src="{% if codigo %}/media/fotos/{{ codigo }}.jpg?ts={{ ts }}{% else %}/media/no-foto.jpg?ts={{ ts }}{% endif %}"
+       alt="Foto empleado"
+       onerror="this.onerror=null; this.src='/media/no-foto.jpg?ts={{ ts }}';" />
+  <div class="info">
+    <div class="codigo">{{ codigo|default:'SIN CÓDIGO' }}</div>
+    <div id="hora"></div>
+  </div>
+</div>
+<script>
+  const elHora = document.getElementById('hora');
+  function tick(){ elHora.textContent = new Date().toLocaleString(); }
+  tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
