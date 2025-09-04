@@ -1,5 +1,11 @@
 from django.db import models
 
+
+TIPO_CONSUMO = (
+    ('DESAYUNO', 'Desayuno'),
+    ('ALMUERZO', 'Almuerzo'),
+)
+
 class EventoZK(models.Model):
     event_id = models.BigIntegerField(unique=True)
     terminal_sn = models.CharField(max_length=64, db_index=True)
@@ -13,3 +19,17 @@ class EventoZK(models.Model):
     def __str__(self):
         return f"{self.event_id} | {self.codigo} @ {self.event_time} ({self.terminal_sn})"
 
+class Consumo(models.Model):
+    codigo        = models.CharField(max_length=32, db_index=True)
+    fecha         = models.DateField(db_index=True)
+    tipo          = models.CharField(max_length=16, choices=TIPO_CONSUMO, db_index=True)
+    primer_evento = models.DateTimeField()
+    terminal_sn   = models.CharField(max_length=64)
+    created_at    = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('codigo', 'fecha', 'tipo')
+        indexes = [ models.Index(fields=['fecha', 'tipo']) ]
+
+    def __str__(self):
+        return f"{self.codigo} {self.fecha} {self.tipo}"
