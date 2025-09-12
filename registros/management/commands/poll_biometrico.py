@@ -46,7 +46,10 @@ class Command(BaseCommand):
                             self.stdout.write(f"Nuevo evento: {resultado}")
 
                 cursor_desde = cursor_hasta
-                time.sleep(intervalo)
+                ahora_local = timezone.now().astimezone(zona_horaria)
+                if cursor_desde >= ahora_local:
+                    self.stdout.write("Polling actualizado. Sin eventos que registrar por el momento.")
+                    time.sleep(0.3)
 
             except KeyboardInterrupt:
                 self.stdout.write("Deteniendo polling...")
