@@ -3,6 +3,8 @@ from django.utils import timezone
 from .models import EventoZK, Consumo
 from .utils import clasificar_consumo
 
+from tools.hik_upload_photo import subir_foto_camara
+
 def _parsear_a_hora_local(fecha_hora_str: str):
     if not fecha_hora_str:
         return None
@@ -45,6 +47,11 @@ def registrar_evento(evento_zk: dict) -> dict:
                 "terminal_sn": numero_serie_term,
             }
         )
+    if consumo_creado:
+        try:
+            subir_foto_camara(codigo_empleado, headless=True)
+        except Exception as e:
+            print(f"[HIK] Fallo al subir foto de {codigo_empleado}: {e}")
 
     return {
         "created_event": True,
